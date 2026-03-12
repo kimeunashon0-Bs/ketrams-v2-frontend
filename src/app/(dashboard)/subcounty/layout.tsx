@@ -1,4 +1,4 @@
-export default function AdminLayout({
+export default function SubCountyLayout({
   children,
 }: {
   children: React.ReactNode;

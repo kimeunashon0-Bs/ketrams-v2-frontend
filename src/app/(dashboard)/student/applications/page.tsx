@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect } from 'react';
-import StudentLayout from '@/components/layout/StudentLayout';
 import api from '@/lib/api/axios';
 import { EyeIcon } from '@heroicons/react/24/outline';
 
@@ -58,7 +57,7 @@ export default function ApplicationsPage() {
   };
 
   return (
-    <StudentLayout>
+    
       <div className="space-y-6">
         <h1 className="text-2xl font-bold text-gray-900">My Applications</h1>
 
@@ -168,6 +167,6 @@ export default function ApplicationsPage() {
           </div>
         )}
       </div>
-    </StudentLayout>
+    
   );
 }

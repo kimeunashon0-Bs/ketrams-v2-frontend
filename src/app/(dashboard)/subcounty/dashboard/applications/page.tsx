@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect } from 'react';
-import SubCountyLayout from '@/components/layout/SubCountyLayout';
 import api from '@/lib/api/axios';
 import { format } from 'date-fns';
 import { XMarkIcon, ArrowDownTrayIcon } from '@heroicons/react/24/outline';
@@ -196,7 +195,6 @@ export default function SubCountyApplicationsPage() {
   };
 
   return (
-    <SubCountyLayout>
       <div className="space-y-6">
         <div className="flex justify-between items-center">
           <h1 className="text-2xl font-bold text-gray-900">Applications in Your Sub‑County</h1>
@@ -454,6 +452,5 @@ export default function SubCountyApplicationsPage() {
           </div>
         )}
       </div>
-    </SubCountyLayout>
   );
 }

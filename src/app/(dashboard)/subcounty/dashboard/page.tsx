@@ -4,7 +4,6 @@ import { useAuth } from '@/lib/auth/AuthContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import api from '@/lib/api/axios';
-import SubCountyLayout from '@/components/layout/SubCountyLayout';
 
 interface Stats {
   totalApplications: number;
@@ -51,7 +50,6 @@ export default function SubCountyDashboard() {
   }, []);
 
   return (
-    <SubCountyLayout>
       <div className="space-y-6">
         <h1 className="text-2xl font-bold text-gray-900">Sub‑County Dashboard</h1>
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -116,6 +114,5 @@ export default function SubCountyDashboard() {
           </div>
         </div>
       </div>
-    </SubCountyLayout>
   );
 }

@@ -1,7 +1,6 @@
 "use client";
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import StudentLayout from '@/components/layout/StudentLayout';
 import api from '@/lib/api/axios';
 
 interface Institution {
@@ -154,7 +153,7 @@ export default function NewApplicationPage() {
   };
 
   return (
-    <StudentLayout>
+    
       <div className="space-y-6">
         <h1 className="text-2xl font-bold text-gray-900">New Application</h1>
 
@@ -327,6 +326,5 @@ export default function NewApplicationPage() {
           </div>
         )}
       </div>
-    </StudentLayout>
   );
 }

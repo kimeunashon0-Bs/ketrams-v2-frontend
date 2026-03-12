@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect } from 'react';
-import SubCountyLayout from '@/components/layout/SubCountyLayout';
 import api from '@/lib/api/axios';
 import { saveAs } from 'file-saver';
 import {
@@ -167,11 +166,10 @@ export default function SubCountyReportsPage() {
   const institutionData = Object.entries(filteredSummary.byInstitution).map(([name, value]) => ({ name, value }));
   const courseData = Object.entries(filteredSummary.byCourse).map(([name, value]) => ({ name, value }));
 
-  if (loading) return <SubCountyLayout><div className="flex justify-center items-center h-64">Loading...</div></SubCountyLayout>;
-  if (error) return <SubCountyLayout><div className="text-red-500 text-center">{error}</div></SubCountyLayout>;
+  if (loading) return <div className="flex justify-center items-center h-64">Loading...</div>;
+  if (error) return <div className="text-red-500 text-center">{error}</div>;
 
   return (
-    <SubCountyLayout>
       <div className="space-y-8">
         <div className="flex justify-between items-center">
           <h1 className="text-2xl font-bold text-gray-900">Sub‑County Reports</h1>
@@ -403,6 +401,5 @@ export default function SubCountyReportsPage() {
           </div>
         </div>
       </div>
-    </SubCountyLayout>
   );
 }

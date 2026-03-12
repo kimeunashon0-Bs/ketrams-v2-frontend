@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect } from 'react';
-import StudentLayout from '@/components/layout/StudentLayout';
 import api from '@/lib/api/axios';
 import { MagnifyingGlassIcon, XMarkIcon } from '@heroicons/react/24/outline';
 
@@ -84,7 +83,7 @@ export default function InstitutionsPage() {
   const subCounties = [...new Set(institutions.map(inst => inst.subCounty.name))];
 
   return (
-    <StudentLayout>
+   
       <div className="space-y-6">
         <h1 className="text-2xl font-bold text-gray-900">Explore Institutions</h1>
 
@@ -246,6 +245,5 @@ export default function InstitutionsPage() {
           </div>
         )}
       </div>
-    </StudentLayout>
   );
 }
