@@ -1,4 +1,5 @@
 "use client";
+
 import { useState, useEffect } from 'react';
 import api from '@/lib/api/axios';
 import { XMarkIcon, EyeIcon } from '@heroicons/react/24/outline';
@@ -26,7 +27,9 @@ export default function InstitutionRequestsPage() {
   const [showDetails, setShowDetails] = useState(false);
   const [actionType, setActionType] = useState<'approve' | 'reject' | null>(null);
   const [rejectionReason, setRejectionReason] = useState('');
+  const [rejectionError, setRejectionError] = useState(''); // validation error
   const [processing, setProcessing] = useState(false);
+  const [error, setError] = useState(''); // API error
   const [credentials, setCredentials] = useState<{ phone: string; password: string } | null>(null);
 
   useEffect(() => {
@@ -34,11 +37,13 @@ export default function InstitutionRequestsPage() {
   }, []);
 
   const fetchRequests = async () => {
+    setLoading(true);
     try {
       const response = await api.get('/admin/institution-requests');
       setRequests(response.data);
     } catch (error) {
       console.error('Failed to fetch requests', error);
+      setError('Failed to load requests. Please refresh.');
     } finally {
       setLoading(false);
     }
@@ -47,12 +52,12 @@ export default function InstitutionRequestsPage() {
   const handleApprove = async () => {
     if (!selectedRequest) return;
     setProcessing(true);
+    setError('');
     try {
       const response = await api.post('/admin/institution-requests/process', {
         requestId: selectedRequest.id,
         approved: true,
       });
-      // Show credentials
       if (response.data.data) {
         setCredentials({
           phone: response.data.data.userPhone,
@@ -60,19 +65,23 @@ export default function InstitutionRequestsPage() {
         });
       }
       await fetchRequests();
-      setSelectedRequest(null);
-      setActionType(null);
-      setShowDetails(false);
-    } catch (error) {
-      console.error('Approval failed', error);
+      closeActionModal();
+    } catch (error: any) {
+      setError(error.response?.data?.message || 'Approval failed. Please try again.');
     } finally {
       setProcessing(false);
     }
   };
 
   const handleReject = async () => {
+    // Validate rejection reason
+    if (!rejectionReason.trim()) {
+      setRejectionError('Please provide a reason for rejection.');
+      return;
+    }
     if (!selectedRequest) return;
     setProcessing(true);
+    setError('');
     try {
       await api.post('/admin/institution-requests/process', {
         requestId: selectedRequest.id,
@@ -80,15 +89,20 @@ export default function InstitutionRequestsPage() {
         rejectionReason,
       });
       await fetchRequests();
-      setSelectedRequest(null);
-      setActionType(null);
-      setRejectionReason('');
-      setShowDetails(false);
-    } catch (error) {
-      console.error('Rejection failed', error);
+      closeActionModal();
+    } catch (error: any) {
+      setError(error.response?.data?.message || 'Rejection failed. Please try again.');
     } finally {
       setProcessing(false);
     }
+  };
+
+  const closeActionModal = () => {
+    setSelectedRequest(null);
+    setActionType(null);
+    setRejectionReason('');
+    setRejectionError('');
+    setError('');
   };
 
   const viewDetails = (req: Request) => {
@@ -101,7 +115,13 @@ export default function InstitutionRequestsPage() {
       <h1 className="text-2xl font-bold text-gray-900">Institution Registration Requests</h1>
 
       {loading ? (
-        <div>Loading...</div>
+        <div className="flex justify-center py-12">
+          <div className="text-gray-500">Loading requests...</div>
+        </div>
+      ) : error && requests.length === 0 ? (
+        <div className="bg-red-50 border-l-4 border-red-400 p-4">
+          <p className="text-sm text-red-700">{error}</p>
+        </div>
       ) : requests.length === 0 ? (
         <div className="bg-white shadow rounded-lg p-12 text-center">
           <p className="text-gray-500">No requests found.</p>
@@ -145,6 +165,7 @@ export default function InstitutionRequestsPage() {
                     <button
                       onClick={() => viewDetails(req)}
                       className="text-indigo-600 hover:text-indigo-900"
+                      title="View details"
                     >
                       <EyeIcon className="h-5 w-5" />
                     </button>
@@ -172,7 +193,7 @@ export default function InstitutionRequestsPage() {
         </div>
       )}
 
-      {/* Details Modal (same as before) */}
+      {/* Details Modal */}
       {showDetails && selectedRequest && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg max-w-2xl w-full max-h-[80vh] overflow-y-auto">
@@ -221,14 +242,14 @@ export default function InstitutionRequestsPage() {
         </div>
       )}
 
-      {/* Action Modal (same) */}
+      {/* Action Modal (Approve/Reject) */}
       {selectedRequest && actionType && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg max-w-md w-full">
             <div className="px-6 py-4 border-b flex justify-between items-center">
               <h2 className="text-xl font-semibold capitalize">{actionType} Request</h2>
               <button
-                onClick={() => { setSelectedRequest(null); setActionType(null); }}
+                onClick={closeActionModal}
                 className="text-gray-400 hover:text-gray-500"
               >
                 <XMarkIcon className="h-6 w-6" />
@@ -239,20 +260,34 @@ export default function InstitutionRequestsPage() {
               <p><span className="font-medium">Admin:</span> {selectedRequest.adminFullName}</p>
               {actionType === 'reject' && (
                 <div>
-                  <label className="block text-sm font-medium text-gray-700">Reason for rejection</label>
+                  <label htmlFor="rejectionReason" className="block text-sm font-medium text-gray-700">
+                    Reason for rejection <span className="text-red-500">*</span>
+                  </label>
                   <textarea
+                    id="rejectionReason"
                     value={rejectionReason}
-                    onChange={(e) => setRejectionReason(e.target.value)}
+                    onChange={(e) => {
+                      setRejectionReason(e.target.value);
+                      if (rejectionError) setRejectionError('');
+                    }}
                     rows={3}
                     className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    placeholder="Please provide a reason..."
                   />
+                  {rejectionError && (
+                    <p className="mt-1 text-sm text-red-600">{rejectionError}</p>
+                  )}
                 </div>
+              )}
+              {error && (
+                <div className="text-red-500 text-sm">{error}</div>
               )}
             </div>
             <div className="px-6 py-3 bg-gray-50 flex justify-end space-x-3">
               <button
-                onClick={() => { setSelectedRequest(null); setActionType(null); }}
+                onClick={closeActionModal}
                 className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
+                disabled={processing}
               >
                 Cancel
               </button>
@@ -268,7 +303,7 @@ export default function InstitutionRequestsPage() {
         </div>
       )}
 
-      {/* Credentials Modal (same) */}
+      {/* Credentials Modal */}
       {credentials && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg max-w-md w-full">

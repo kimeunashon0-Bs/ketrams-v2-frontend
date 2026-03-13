@@ -234,7 +234,7 @@ export default function StudentProfilePage() {
   const toggleManualWard = () => {
     setManualWard(!manualWard);
     if (!manualWard && selectedSubCountyId) {
-      // Switching back to dropdown: if current ward matches an existing one, keep it
+      // Switching back to dropdown: if current ward matches an existing one
       // No need to fetch again as wards are already loaded
     }
   };
@@ -367,7 +367,7 @@ export default function StudentProfilePage() {
 
       <form onSubmit={handleSubmit} className="bg-white shadow rounded-lg p-6 space-y-6">
         {error && (
-          <div className="bg-red-50 border-l-4 border-red-400 p-4">
+          <div className="bg-red-50 bord      er-l-4 border-red-400 p-4">
             <p className="text-sm text-red-700">{error}</p>
           </div>
         )}
@@ -659,7 +659,7 @@ export default function StudentProfilePage() {
             </div>
           </div>
         </div>
-
+ 
         {/* Document Upload */}
         <div className="space-y-4 pt-4 border-t">
           <h2 className="text-lg font-medium text-gray-900">Supporting Documents (max 10MB each, multiple allowed)</h2>

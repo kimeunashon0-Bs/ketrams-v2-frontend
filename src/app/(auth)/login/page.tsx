@@ -1,22 +1,61 @@
 "use client";
+
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { z } from 'zod';
 import { useAuth } from '@/lib/auth/AuthContext';
 import Link from 'next/link';
 import AuthLayout from '@/components/auth/AuthLayout';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 
+// Kenyan phone number: exactly 10 digits, starting with 07 or 01
+const kenyanPhoneRegex = /^(07|01)[0-9]{8}$/;
+
+const loginSchema = z.object({
+  phoneNumber: z
+    .string()
+    .min(1, 'Phone number is required')
+    .regex(kenyanPhoneRegex, 'Enter a valid Kenyan phone number (e.g., 0712345678)'),
+  password: z
+    .string()
+    .min(1, 'Password is required')
+    .min(6, 'Password must be at least 6 characters'),
+  rememberMe: z.boolean().optional(),
+});
+
+type LoginFormData = z.infer<typeof loginSchema>;
+
 export default function LoginPage() {
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [rememberMe, setRememberMe] = useState(false);
   const [error, setError] = useState('');
   const { login, isLoading } = useAuth();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    trigger,
+    formState: { errors },
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+    mode: 'onChange', // Validate on every change
+    defaultValues: {
+      phoneNumber: '',
+      password: '',
+      rememberMe: false,
+    },
+  });
+
+  // Custom phone number handler to allow only digits
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value.replace(/\D/g, ''); // Remove non-digits
+    setValue('phoneNumber', value, { shouldValidate: true });
+  };
+
+  const onSubmit = async (data: LoginFormData) => {
     try {
-      await login(phoneNumber, password, rememberMe);
+      await login(data.phoneNumber, data.password, data.rememberMe);
     } catch (err) {
       setError('Invalid credentials. Please try again.');
     }
@@ -24,23 +63,27 @@ export default function LoginPage() {
 
   return (
     <AuthLayout title="Sign in to KETRAMS" subtitle="Use your phone number and password">
-      <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+      <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
         <div className="space-y-4">
+          {/* Phone Number */}
           <div>
-            <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700">
               Phone Number
             </label>
             <input
-              id="phone"
-              name="phone"
-              type="text"
-              required
+              id="phoneNumber"
+              type="tel"
+              inputMode="numeric"
+              {...register('phoneNumber', { onChange: handlePhoneChange })}
               className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
               placeholder="0712345678"
-              value={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
             />
+            {errors.phoneNumber && (
+              <p className="mt-1 text-sm text-red-600">{errors.phoneNumber.message}</p>
+            )}
           </div>
+
+          {/* Password */}
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-gray-700">
               Password
@@ -48,13 +91,10 @@ export default function LoginPage() {
             <div className="relative mt-1">
               <input
                 id="password"
-                name="password"
                 type={showPassword ? 'text' : 'password'}
-                required
+                {...register('password')}
                 className="block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 pr-10 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 placeholder="********"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
               />
               <button
                 type="button"
@@ -64,20 +104,22 @@ export default function LoginPage() {
                 {showPassword ? <EyeSlashIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
               </button>
             </div>
+            {errors.password && (
+              <p className="mt-1 text-sm text-red-600">{errors.password.message}</p>
+            )}
           </div>
         </div>
 
+        {/* Remember me and Forgot password */}
         <div className="flex items-center justify-between">
           <div className="flex items-center">
             <input
-              id="remember-me"
-              name="remember-me"
+              id="rememberMe"
               type="checkbox"
-              checked={rememberMe}
-              onChange={(e) => setRememberMe(e.target.checked)}
+              {...register('rememberMe')}
               className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
             />
-            <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
+            <label htmlFor="rememberMe" className="ml-2 block text-sm text-gray-900">
               Remember me
             </label>
           </div>
@@ -88,10 +130,12 @@ export default function LoginPage() {
           </div>
         </div>
 
+        {/* API error */}
         {error && (
           <div className="text-red-500 text-sm text-center">{error}</div>
         )}
 
+        {/* Submit button */}
         <div>
           <button
             type="submit"
@@ -102,6 +146,7 @@ export default function LoginPage() {
           </button>
         </div>
 
+        {/* Links */}
         <div className="text-sm text-center">
           <Link href="/register" className="font-medium text-indigo-600 hover:text-indigo-500">
             Don't have an account? Register

@@ -6,6 +6,36 @@ import { useState, useRef, useEffect } from 'react';
 import { motion, useInView } from 'framer-motion';
 import { ChevronDown, GraduationCap, Building2, TrendingUp, Clock, Shield, Users } from 'lucide-react';
 
+// Animated number component
+function AnimatedNumber({ value, suffix = '' }: { value: number; suffix?: string }) {
+  const [count, setCount] = useState(0);
+  const ref = useRef<HTMLSpanElement>(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+
+  useEffect(() => {
+    if (!isInView) return;
+    let start = 0;
+    const end = value;
+    const duration = 1500; // 1.5 seconds
+    const increment = end / (duration / 16); // 60fps
+
+    let timer: NodeJS.Timeout;
+    const step = () => {
+      start += increment;
+      if (start < end) {
+        setCount(Math.floor(start));
+        timer = setTimeout(step, 16);
+      } else {
+        setCount(end);
+      }
+    };
+    step();
+    return () => clearTimeout(timer);
+  }, [isInView, value]);
+
+  return <span ref={ref}>{count}{suffix}</span>;
+}
+
 export default function Home() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -25,10 +55,10 @@ export default function Home() {
   }, []);
 
   const stats = [
-    { value: '25+', label: 'Institutions' },
-    { value: '1,200+', label: 'Students Placed' },
-    { value: '95%', label: 'Satisfaction Rate' },
-    { value: '24/7', label: 'Support' },
+    { value: 25, suffix: '+', label: 'Institutions' },
+    { value: 1200, suffix: '+', label: 'Students Placed' },
+    { value: 95, suffix: '%', label: 'Satisfaction Rate' },
+    { value: 24, suffix: '/7', label: 'Support' },
   ];
 
   const institutionFeatures = [
@@ -174,6 +204,7 @@ export default function Home() {
               </Link>
             </motion.div>
 
+            {/* Animated stats */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
@@ -182,7 +213,9 @@ export default function Home() {
             >
               {stats.map((stat, idx) => (
                 <div key={idx} className="text-center bg-white/10 backdrop-blur-sm rounded-xl p-4 border border-white/20">
-                  <div className="text-3xl md:text-4xl font-bold text-white">{stat.value}</div>
+                  <div className="text-3xl md:text-4xl font-bold text-white">
+                    <AnimatedNumber value={stat.value} suffix={stat.suffix} />
+                  </div>
                   <div className="text-sm text-white/80">{stat.label}</div>
                 </div>
               ))}
@@ -301,20 +334,20 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Footer */}
+        {/* Footer - centered on all devices */}
         <footer className="bg-white/10 backdrop-blur-md border-t border-white/20 py-12 px-4 sm:px-6 lg:px-8">
-          <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center">
-            <div className="flex items-center space-x-2 mb-4 md:mb-0">
+          <div className="max-w-7xl mx-auto flex flex-col items-center md:flex-row md:justify-between gap-6">
+            <div className="flex items-center space-x-2">
               <GraduationCap className="h-6 w-6 text-indigo-300" />
               <span className="text-lg font-bold text-white">KETRAMS</span>
             </div>
-            <div className="flex space-x-6 text-sm">
+            <div className="flex flex-wrap justify-center gap-6 text-sm">
               <Link href="/about" className="text-white/70 hover:text-white transition">About</Link>
               <Link href="/contact" className="text-white/70 hover:text-white transition">Contact</Link>
               <Link href="/privacy" className="text-white/70 hover:text-white transition">Privacy</Link>
               <Link href="/terms" className="text-white/70 hover:text-white transition">Terms</Link>
             </div>
-            <p className="text-sm text-white/50 mt-4 md:mt-0">
+            <p className="text-sm text-white/50">
               © {new Date().getFullYear()} KETRAMS. All rights reserved.
             </p>
           </div>
