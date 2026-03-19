@@ -111,12 +111,11 @@ export function DashboardSidebar() {
   const router = useRouter();
   const [pendingCount, setPendingCount] = useState(0);
   const [notifications, setNotifications] = useState<any[]>([]);
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
 
-  // Determine which nav to show based on user role
   const role = user?.role?.toLowerCase() || 'student';
   const navSections = navigation[role] || navigation.student;
 
-  // Fetch real data
   useEffect(() => {
     if (user?.role === 'INSTITUTION') {
       fetchInstitutionData();
@@ -127,13 +126,16 @@ export function DashboardSidebar() {
     }
   }, [user]);
 
+  useEffect(() => {
+    setIsMobileOpen(false);
+  }, [pathname]);
+
   const fetchInstitutionData = async () => {
     try {
       const appsRes = await api.get('/institution/applications');
       const pending = appsRes.data.data.filter((a: any) => a.status === 'PENDING_INSTITUTION').length;
       setPendingCount(pending);
       
-      // Mock notifications - replace with real endpoint
       setNotifications([
         { id: 1, title: 'New Application', message: '5 new applications received', time: '5 min ago' },
         { id: 2, title: 'Course Update', message: 'ICT course was updated', time: '1 hour ago' },
@@ -173,139 +175,174 @@ export function DashboardSidebar() {
   };
 
   return (
-    <div
-      className={cn(
-        "fixed inset-y-0 left-0 z-50 flex flex-col border-r bg-card transition-all duration-300",
-        isCollapsed ? "w-20" : "w-64"
+    <>
+      {/* Mobile hamburger button */}
+      <Button
+        variant="ghost"
+        size="icon"
+        className="lg:hidden fixed top-4 left-4 z-50"
+        onClick={() => setIsMobileOpen(true)}
+      >
+        <Menu className="h-5 w-5" />
+      </Button>
+
+      {/* Overlay backdrop for mobile */}
+      {isMobileOpen && (
+        <div
+          className="lg:hidden fixed inset-0 bg-black/50 z-40"
+          onClick={() => setIsMobileOpen(false)}
+        />
       )}
-    >
-      {/* Logo area with collapse button */}
-      <div className="flex h-16 items-center justify-between border-b px-4">
-        {!isCollapsed ? (
-          <div className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
-              <span className="text-lg font-bold text-primary-foreground">K</span>
-            </div>
-            <span className="text-xl font-bold">KETRAMS</span>
-          </div>
-        ) : (
-          <div className="w-full flex justify-center">
-            <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
-              <span className="text-lg font-bold text-primary-foreground">K</span>
-            </div>
-          </div>
+
+      {/* Sidebar */}
+      <div
+        className={cn(
+          "fixed inset-y-0 left-0 z-50 flex flex-col border-r bg-card transition-all duration-300",
+          "lg:hidden",
+          isMobileOpen ? "translate-x-0" : "-translate-x-full",
+          "lg:translate-x-0 lg:block",
+          isCollapsed ? "lg:w-20" : "lg:w-64"
         )}
+      >
+        {/* Close button inside sidebar for mobile */}
         <Button
           variant="ghost"
           size="icon"
-          onClick={toggleSidebar}
-          className="hidden lg:flex"
+          className="lg:hidden absolute top-4 right-4"
+          onClick={() => setIsMobileOpen(false)}
         >
-          {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+          <X className="h-4 w-4" />
         </Button>
-      </div>
 
-      {/* User info */}
-      <div className={cn("border-b p-4", isCollapsed && "flex justify-center")}>
-        {isCollapsed ? (
-          <Avatar className="h-10 w-10">
-            <AvatarFallback className="bg-primary/10 text-primary">
-              {getInitials()}
-            </AvatarFallback>
-          </Avatar>
-        ) : (
-          <div className="flex items-center gap-3">
+        {/* Logo area */}
+        <div className="flex h-16 items-center justify-between border-b px-4">
+          {!isCollapsed ? (
+            <div className="flex items-center gap-2">
+              <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
+                <span className="text-lg font-bold text-primary-foreground">K</span>
+              </div>
+              <span className="text-xl font-bold">KETRAMS</span>
+            </div>
+          ) : (
+            <div className="w-full flex justify-center">
+              <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
+                <span className="text-lg font-bold text-primary-foreground">K</span>
+              </div>
+            </div>
+          )}
+          {/* Desktop collapse button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={toggleSidebar}
+            className="hidden lg:flex"
+          >
+            {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+          </Button>
+        </div>
+
+        {/* User info */}
+        <div className={cn("border-b p-4", isCollapsed && "flex justify-center")}>
+          {isCollapsed ? (
             <Avatar className="h-10 w-10">
               <AvatarFallback className="bg-primary/10 text-primary">
                 {getInitials()}
               </AvatarFallback>
             </Avatar>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium truncate">{user?.fullName || user?.phoneNumber}</p>
-              <p className="text-xs text-muted-foreground truncate capitalize">
-                {user?.role?.toLowerCase().replace('_', ' ')}
-                {user?.institutionName && ` • ${user.institutionName}`}
-              </p>
+          ) : (
+            <div className="flex items-center gap-3">
+              <Avatar className="h-10 w-10">
+                <AvatarFallback className="bg-primary/10 text-primary">
+                  {getInitials()}
+                </AvatarFallback>
+              </Avatar>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium truncate">{user?.fullName || user?.phoneNumber}</p>
+                <p className="text-xs text-muted-foreground truncate capitalize">
+                  {user?.role?.toLowerCase().replace('_', ' ')}
+                  {user?.institutionName && ` • ${user.institutionName}`}
+                </p>
+              </div>
             </div>
-          </div>
-        )}
-      </div>
+          )}
+        </div>
 
-      {/* Navigation */}
-      <ScrollArea className="flex-1 px-3 py-4">
-        {navSections.map((section, idx) => (
-          <div key={section.title} className={cn("mb-6", idx > 0 && "mt-6")}>
-            {!isCollapsed && (
-              <h4 className="mb-2 px-2 text-xs font-semibold text-muted-foreground">
-                {section.title}
-              </h4>
-            )}
-            <nav className="space-y-1">
-              {section.items.map((item) => {
-                const isActive = pathname === item.href;
-                const showBadge = item.name === 'Applications' && pendingCount > 0;
-                
-                return (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    className={cn(
-                      "flex items-center rounded-lg px-3 py-2 text-sm font-medium transition-colors",
-                      isActive 
-                        ? "bg-primary text-primary-foreground" 
-                        : "hover:bg-muted text-foreground",
-                      isCollapsed && "justify-center"
-                    )}
-                  >
-                    <item.icon className={cn("h-5 w-5", !isCollapsed && "mr-3")} />
-                    {!isCollapsed && (
-                      <>
-                        <span className="flex-1">{item.name}</span>
-                        {showBadge && (
-                          <Badge variant={isActive ? "secondary" : "default"} className="ml-auto">
-                            {pendingCount}
-                          </Badge>
-                        )}
-                      </>
-                    )}
-                    {isCollapsed && showBadge && (
-                      <Badge 
-                        variant="destructive" 
-                        className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center"
-                      >
-                        {pendingCount}
-                      </Badge>
-                    )}
-                  </Link>
-                );
-              })}
-            </nav>
-          </div>
-        ))}
-      </ScrollArea>
+        {/* Navigation */}
+        <ScrollArea className="flex-1 px-3 py-4">
+          {navSections.map((section, idx) => (
+            <div key={section.title} className={cn("mb-6", idx > 0 && "mt-6")}>
+              {!isCollapsed && (
+                <h4 className="mb-2 px-2 text-xs font-semibold text-muted-foreground">
+                  {section.title}
+                </h4>
+              )}
+              <nav className="space-y-1">
+                {section.items.map((item) => {
+                  const isActive = pathname === item.href;
+                  const showBadge = item.name === 'Applications' && pendingCount > 0;
+                  
+                  return (
+                    <Link
+                      key={item.name}
+                      href={item.href}
+                      className={cn(
+                        "flex items-center rounded-lg px-3 py-2 text-sm font-medium transition-colors",
+                        isActive 
+                          ? "bg-primary text-primary-foreground" 
+                          : "hover:bg-muted text-foreground",
+                        isCollapsed && "justify-center"
+                      )}
+                    >
+                      <item.icon className={cn("h-5 w-5", !isCollapsed && "mr-3")} />
+                      {!isCollapsed && (
+                        <>
+                          <span className="flex-1">{item.name}</span>
+                          {showBadge && (
+                            <Badge variant={isActive ? "secondary" : "default"} className="ml-auto">
+                              {pendingCount}
+                            </Badge>
+                          )}
+                        </>
+                      )}
+                      {isCollapsed && showBadge && (
+                        <Badge 
+                          variant="destructive" 
+                          className="absolute -top-1 -right-1 h-5 w-5 p-0 flex items-center justify-center"
+                        >
+                          {pendingCount}
+                        </Badge>
+                      )}
+                    </Link>
+                  );
+                })}
+              </nav>
+            </div>
+          ))}
+        </ScrollArea>
 
-      {/* Footer with logout */}
-      <div className="border-t p-4">
-        {isCollapsed ? (
-          <Button
-            variant="ghost"
-            size="icon"
-            className="w-full"
-            onClick={logout}
-          >
-            <LogOut className="h-5 w-5 text-red-500" />
-          </Button>
-        ) : (
-          <Button
-            variant="ghost"
-            className="w-full justify-start text-red-500 hover:text-red-600 hover:bg-red-50"
-            onClick={logout}
-          >
-            <LogOut className="mr-3 h-5 w-5" />
-            Logout
-          </Button>
-        )}
+        {/* Footer logout */}
+        <div className="border-t p-4">
+          {isCollapsed ? (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="w-full"
+              onClick={logout}
+            >
+              <LogOut className="h-5 w-5 text-red-500" />
+            </Button>
+          ) : (
+            <Button
+              variant="ghost"
+              className="w-full justify-start text-red-500 hover:text-red-600 hover:bg-red-50"
+              onClick={logout}
+            >
+              <LogOut className="mr-3 h-5 w-5" />
+              Logout
+            </Button>
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 }
