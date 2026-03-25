@@ -100,38 +100,39 @@ export default function AdminInstitutionUsersPage() {
 
   return (
     <div className="space-y-6">
-        <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-gray-900">Institution Users</h1>
-          <button
-            onClick={() => setShowModal(true)}
-            className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 flex items-center"
-          >
-            <PlusIcon className="h-5 w-5 mr-1" /> Add User
-          </button>
-        </div>
+      <div className="flex justify-between items-center">
+        <h1 className="text-2xl font-bold text-gray-900">Institution Users</h1>
+        <button
+          onClick={() => setShowModal(true)}
+          className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 flex items-center"
+        >
+          <PlusIcon className="h-5 w-5 mr-1" /> Add User
+        </button>
+      </div>
 
-        {/* Search bar */}
-        <div className="bg-white shadow rounded-lg p-4">
-          <div className="relative">
-            <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search by phone number..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            />
-          </div>
+      {/* Search bar */}
+      <div className="bg-white shadow rounded-lg p-4">
+        <div className="relative">
+          <MagnifyingGlassIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+          <input
+            type="text"
+            placeholder="Search by phone number..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="pl-10 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          />
         </div>
+      </div>
 
-        {loading ? (
-          <div>Loading...</div>
-        ) : filteredUsers.length === 0 ? (
-          <div className="bg-white shadow rounded-lg p-12 text-center">
-            <p className="text-gray-500">No users found.</p>
-          </div>
-        ) : (
-          <div className="bg-white shadow overflow-hidden sm:rounded-lg">
+      {loading ? (
+        <div>Loading...</div>
+      ) : filteredUsers.length === 0 ? (
+        <div className="bg-white shadow rounded-lg p-12 text-center">
+          <p className="text-gray-500">No users found.</p>
+        </div>
+      ) : (
+        <div className="bg-white shadow overflow-hidden sm:rounded-lg">
+          <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
@@ -178,100 +179,101 @@ export default function AdminInstitutionUsersPage() {
               </tbody>
             </table>
           </div>
-        )}
+        </div>
+      )}
 
-        {/* Add User Modal */}
-        {showModal && (
-          <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg max-w-md w-full">
-              <div className="px-6 py-4 border-b">
-                <h2 className="text-xl font-semibold">Create Institution User</h2>
-              </div>
-              <form onSubmit={handleSubmit} className="px-6 py-4 space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Phone Number</label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.phoneNumber}
-                    onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Password (min. 6 characters)</label>
-                  <input
-                    type="password"
-                    required
-                    minLength={6}
-                    value={formData.password}
-                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700">Institution</label>
-                  <select
-                    required
-                    value={formData.institutionId}
-                    onChange={(e) => setFormData({ ...formData, institutionId: e.target.value })}
-                    className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                  >
-                    <option value="">Select</option>
-                    {institutions.map(inst => (
-                      <option key={inst.id} value={inst.id}>{inst.name}</option>
-                    ))}
-                  </select>
-                </div>
-                <div className="flex justify-end space-x-3 pt-4">
-                  <button
-                    type="button"
-                    onClick={() => setShowModal(false)}
-                    className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
-                  >
-                    Create
-                  </button>
-                </div>
-              </form>
+      {/* Add User Modal */}
+      {showModal && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg max-w-md w-full">
+            <div className="px-6 py-4 border-b">
+              <h2 className="text-xl font-semibold">Create Institution User</h2>
             </div>
-          </div>
-        )}
-
-        {/* Confirmation Dialog */}
-        {showConfirm && (
-          <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-50">
-            <div className="bg-white rounded-lg max-w-md w-full">
-              <div className="px-6 py-4 border-b">
-                <h2 className="text-xl font-semibold">Confirm Action</h2>
+            <form onSubmit={handleSubmit} className="px-6 py-4 space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Phone Number</label>
+                <input
+                  type="text"
+                  required
+                  value={formData.phoneNumber}
+                  onChange={(e) => setFormData({ ...formData, phoneNumber: e.target.value })}
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                />
               </div>
-              <div className="px-6 py-4">
-                <p className="text-gray-700">
-                  Are you sure you want to {selectedUserStatus ? 'disable' : 'enable'} this user?
-                </p>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Password (min. 6 characters)</label>
+                <input
+                  type="password"
+                  required
+                  minLength={6}
+                  value={formData.password}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                />
               </div>
-              <div className="px-6 py-3 bg-gray-50 flex justify-end space-x-3">
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Institution</label>
+                <select
+                  required
+                  value={formData.institutionId}
+                  onChange={(e) => setFormData({ ...formData, institutionId: e.target.value })}
+                  className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                >
+                  <option value="">Select</option>
+                  {institutions.map(inst => (
+                    <option key={inst.id} value={inst.id}>{inst.name}</option>
+                  ))}
+                </select>
+              </div>
+              <div className="flex justify-end space-x-3 pt-4">
                 <button
-                  onClick={() => setShowConfirm(false)}
+                  type="button"
+                  onClick={() => setShowModal(false)}
                   className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
                 >
                   Cancel
                 </button>
                 <button
-                  onClick={toggleUserStatus}
+                  type="submit"
                   className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
                 >
-                  Confirm
+                  Create
                 </button>
               </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Confirmation Dialog */}
+      {showConfirm && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg max-w-md w-full">
+            <div className="px-6 py-4 border-b">
+              <h2 className="text-xl font-semibold">Confirm Action</h2>
+            </div>
+            <div className="px-6 py-4">
+              <p className="text-gray-700">
+                Are you sure you want to {selectedUserStatus ? 'disable' : 'enable'} this user?
+              </p>
+            </div>
+            <div className="px-6 py-3 bg-gray-50 flex justify-end space-x-3">
+              <button
+                onClick={() => setShowConfirm(false)}
+                className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={toggleUserStatus}
+                className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700"
+              >
+                Confirm
+              </button>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
+    </div>
   );
 }

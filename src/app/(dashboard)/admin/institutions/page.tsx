@@ -142,64 +142,66 @@ export default function AdminInstitutionsPage() {
         <div>Loading...</div>
       ) : (
         <div className="bg-white shadow rounded-lg overflow-hidden">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Sub-County</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Ward</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {institutions.map((inst) => (
-                <tr key={inst.id}>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{inst.name}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{inst.category}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{inst.subCounty.name}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{inst.ward.name}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                      inst.enabled ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-                    }`}>
-                      {inst.enabled ? 'Active' : 'Disabled'}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
-                    <button onClick={() => handleEdit(inst)} className="text-indigo-600 hover:text-indigo-900">
-                      <PencilIcon className="h-5 w-5" />
-                    </button>
-                    <button
-                      onClick={() => confirmToggle(inst.id, inst.enabled)}
-                      className={`inline-flex items-center ${
-                        inst.enabled ? 'text-red-600 hover:text-red-900' : 'text-green-600 hover:text-green-900'
-                      }`}
-                    >
-                      {inst.enabled ? (
-                        <>
-                          <PauseIcon className="h-4 w-4 mr-1" />
-                          Disable
-                        </>
-                      ) : (
-                        <>
-                          <PlayIcon className="h-4 w-4 mr-1" />
-                          Enable
-                        </>
-                      )}
-                    </button>
-                  </td>
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Category</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Sub-County</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Ward</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {institutions.map((inst) => (
+                  <tr key={inst.id}>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{inst.name}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{inst.category}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{inst.subCounty.name}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{inst.ward.name}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                        inst.enabled ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+                      }`}>
+                        {inst.enabled ? 'Active' : 'Disabled'}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                      <button onClick={() => handleEdit(inst)} className="text-indigo-600 hover:text-indigo-900">
+                        <PencilIcon className="h-5 w-5" />
+                      </button>
+                      <button
+                        onClick={() => confirmToggle(inst.id, inst.enabled)}
+                        className={`inline-flex items-center ${
+                          inst.enabled ? 'text-red-600 hover:text-red-900' : 'text-green-600 hover:text-green-900'
+                        }`}
+                      >
+                        {inst.enabled ? (
+                          <>
+                            <PauseIcon className="h-4 w-4 mr-1" />
+                            Disable
+                          </>
+                        ) : (
+                          <>
+                            <PlayIcon className="h-4 w-4 mr-1" />
+                            Enable
+                          </>
+                        )}
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 
       {/* Add/Edit Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg max-w-md w-full">
             <div className="px-6 py-4 border-b">
               <h2 className="text-xl font-semibold">{editingId ? 'Edit Institution' : 'Add Institution'}</h2>
@@ -275,7 +277,7 @@ export default function AdminInstitutionsPage() {
 
       {/* Confirmation Dialog */}
       {showConfirm && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg max-w-md w-full">
             <div className="px-6 py-4 border-b">
               <h2 className="text-xl font-semibold">Confirm Action</h2>

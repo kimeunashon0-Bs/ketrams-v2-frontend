@@ -27,9 +27,9 @@ export default function InstitutionRequestsPage() {
   const [showDetails, setShowDetails] = useState(false);
   const [actionType, setActionType] = useState<'approve' | 'reject' | null>(null);
   const [rejectionReason, setRejectionReason] = useState('');
-  const [rejectionError, setRejectionError] = useState(''); // validation error
+  const [rejectionError, setRejectionError] = useState('');
   const [processing, setProcessing] = useState(false);
-  const [error, setError] = useState(''); // API error
+  const [error, setError] = useState('');
   const [credentials, setCredentials] = useState<{ phone: string; password: string } | null>(null);
 
   useEffect(() => {
@@ -74,7 +74,6 @@ export default function InstitutionRequestsPage() {
   };
 
   const handleReject = async () => {
-    // Validate rejection reason
     if (!rejectionReason.trim()) {
       setRejectionError('Please provide a reason for rejection.');
       return;
@@ -128,74 +127,76 @@ export default function InstitutionRequestsPage() {
         </div>
       ) : (
         <div className="bg-white shadow overflow-hidden sm:rounded-lg">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Institution</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Admin</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Location</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
-                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {requests.map((req) => (
-                <tr key={req.id}>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">{req.institutionName}</div>
-                    <div className="text-xs text-gray-500">{req.category}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm text-gray-900">{req.adminFullName}</div>
-                    <div className="text-xs text-gray-500">{req.adminEmail} | {req.adminPhone}</div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {req.subCounty.name} - {req.ward.name}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                      req.status === 'PENDING' ? 'bg-yellow-100 text-yellow-800' :
-                      req.status === 'APPROVED' ? 'bg-green-100 text-green-800' :
-                      'bg-red-100 text-red-800'
-                    }`}>
-                      {req.status}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
-                    <button
-                      onClick={() => viewDetails(req)}
-                      className="text-indigo-600 hover:text-indigo-900"
-                      title="View details"
-                    >
-                      <EyeIcon className="h-5 w-5" />
-                    </button>
-                    {req.status === 'PENDING' && (
-                      <>
-                        <button
-                          onClick={() => { setSelectedRequest(req); setActionType('approve'); }}
-                          className="text-green-600 hover:text-green-900"
-                        >
-                          Approve
-                        </button>
-                        <button
-                          onClick={() => { setSelectedRequest(req); setActionType('reject'); }}
-                          className="text-red-600 hover:text-red-900"
-                        >
-                          Reject
-                        </button>
-                      </>
-                    )}
-                  </td>
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Institution</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Admin</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Location</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase">Actions</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {requests.map((req) => (
+                  <tr key={req.id}>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm font-medium text-gray-900">{req.institutionName}</div>
+                      <div className="text-xs text-gray-500">{req.category}</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900">{req.adminFullName}</div>
+                      <div className="text-xs text-gray-500">{req.adminEmail} | {req.adminPhone}</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {req.subCounty.name} - {req.ward.name}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                        req.status === 'PENDING' ? 'bg-yellow-100 text-yellow-800' :
+                        req.status === 'APPROVED' ? 'bg-green-100 text-green-800' :
+                        'bg-red-100 text-red-800'
+                      }`}>
+                        {req.status}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
+                      <button
+                        onClick={() => viewDetails(req)}
+                        className="text-indigo-600 hover:text-indigo-900"
+                        title="View details"
+                      >
+                        <EyeIcon className="h-5 w-5" />
+                      </button>
+                      {req.status === 'PENDING' && (
+                        <>
+                          <button
+                            onClick={() => { setSelectedRequest(req); setActionType('approve'); }}
+                            className="text-green-600 hover:text-green-900"
+                          >
+                            Approve
+                          </button>
+                          <button
+                            onClick={() => { setSelectedRequest(req); setActionType('reject'); }}
+                            className="text-red-600 hover:text-red-900"
+                          >
+                            Reject
+                          </button>
+                        </>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 
       {/* Details Modal */}
       {showDetails && selectedRequest && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg max-w-2xl w-full max-h-[80vh] overflow-y-auto">
             <div className="px-6 py-4 border-b flex justify-between items-center">
               <h2 className="text-xl font-semibold text-gray-900">Request Details</h2>
@@ -244,7 +245,7 @@ export default function InstitutionRequestsPage() {
 
       {/* Action Modal (Approve/Reject) */}
       {selectedRequest && actionType && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg max-w-md w-full">
             <div className="px-6 py-4 border-b flex justify-between items-center">
               <h2 className="text-xl font-semibold capitalize">{actionType} Request</h2>
@@ -305,7 +306,7 @@ export default function InstitutionRequestsPage() {
 
       {/* Credentials Modal */}
       {credentials && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-75 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg max-w-md w-full">
             <div className="px-6 py-4 border-b">
               <h2 className="text-xl font-semibold">Institution Approved</h2>
