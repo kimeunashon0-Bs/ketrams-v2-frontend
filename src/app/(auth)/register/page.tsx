@@ -74,6 +74,7 @@ export default function RegisterPage() {
       });
       setPhoneNumber(data.phoneNumber);
       setOtpSent(true);
+      verifyForm.reset({ otp: '' });
     } catch (err: any) {
       setError(err.response?.data?.message || 'Failed to send OTP. Please try again.');
     } finally {
@@ -84,17 +85,27 @@ export default function RegisterPage() {
   const handleVerifyOtp = async (data: VerifyOtpFormData) => {
     setLoading(true);
     setError('');
+    const payload = {
+      phoneNumber,
+      otpCode: data.otp,
+    };
+    console.log('🔍 Verification payload:', payload);
     try {
-      await api.post('/auth/verify-otp', {
-        phoneNumber,
-        otpCode: data.otp,
-        email: requestForm.getValues('email') || undefined,
-      });
+      await api.post('/auth/verify-otp', payload);
       router.push(`/set-password?phone=${encodeURIComponent(phoneNumber)}`);
     } catch (err: any) {
       setError(err.response?.data?.message || 'Invalid OTP. Please try again.');
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleBack = () => {
+    setOtpSent(false);
+    verifyForm.reset({ otp: '' });
+    // Ensure the phone number is still in the form (it already is, but just in case)
+    if (phoneNumber) {
+      requestForm.setValue('phoneNumber', phoneNumber);
     }
   };
 
@@ -108,9 +119,11 @@ export default function RegisterPage() {
                 Phone Number <span className="text-red-500">*</span>
               </label>
               <input
+                key={otpSent ? 'phone-otp' : 'phone'} // forces new DOM element when switching views
                 id="phoneNumber"
                 type="tel"
                 inputMode="numeric"
+                autoComplete="off"
                 {...requestForm.register('phoneNumber', { onChange: handlePhoneChange })}
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 placeholder="0712345678"
@@ -126,6 +139,7 @@ export default function RegisterPage() {
               <input
                 id="email"
                 type="email"
+                autoComplete="email"
                 {...requestForm.register('email')}
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                 placeholder="you@example.com"
@@ -182,6 +196,7 @@ export default function RegisterPage() {
                 type="text"
                 inputMode="numeric"
                 maxLength={6}
+                autoComplete="one-time-code"
                 {...verifyForm.register('otp', { onChange: handleOtpChange })}
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm text-center tracking-widest"
                 placeholder="6-digit code"
@@ -201,7 +216,7 @@ export default function RegisterPage() {
             <div className="text-sm text-center">
               <button
                 type="button"
-                onClick={() => setOtpSent(false)}
+                onClick={handleBack}
                 className="font-medium text-indigo-600 hover:text-indigo-500"
               >
                 Change phone/email
