@@ -60,32 +60,32 @@ export default function Home() {
   }, []);
 
   const stats = [
-    { value: 25, suffix: '+', label: 'Institutions' },
-    { value: 1200, suffix: '+', label: 'Students Placed' },
-    { value: 95, suffix: '%', label: 'Satisfaction Rate' },
+    { value: 68, suffix: '+', label: 'Institutions' },
+    { value: 5000, suffix: '+', label: 'Students Enrolled' },
+    { value: 98, suffix: '%', label: 'Satisfaction Rate' },
     { value: 24, suffix: '/7', label: 'Support' },
   ];
 
   const institutionFeatures = [
     {
       icon: <TrendingUp className="h-6 w-6" />,
-      title: 'Streamlined Admissions',
-      description: 'Manage all applications in one dashboard with real‑time updates.',
+      title: 'Centralised Admissions',
+      description: 'Manage all applications from one dashboard with real‑time tracking.',
     },
     {
       icon: <Clock className="h-6 w-6" />,
       title: 'Faster Processing',
-      description: 'Reduce paperwork and accelerate your enrollment cycles.',
+      description: 'Reduce paperwork and accelerate enrollment cycles across all polytechnics.',
     },
     {
       icon: <Shield className="h-6 w-6" />,
       title: 'Secure & Compliant',
-      description: 'Data protection and county regulations built‑in.',
+      description: 'Data protection and county education regulations built‑in.',
     },
     {
       icon: <Users className="h-6 w-6" />,
-      title: 'Dedicated Support',
-      description: 'Priority assistance for institution administrators.',
+      title: 'Multi‑Role Access',
+      description: 'Tailored dashboards for institutions, treasury, and ministry officials.',
     },
   ];
 
@@ -100,7 +100,8 @@ export default function Home() {
           }}
         />
         <div className="absolute inset-0 bg-gradient-to-br from-blue-900/60 via-indigo-900/70 to-purple-900/60 mix-blend-multiply" />
-<div className={`absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.02"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-20`} />      </div>
+        <div className={`absolute inset-0 bg-[url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23ffffff" fill-opacity="0.02"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E')] opacity-20`} />
+      </div>
 
       {/* Navbar */}
       <motion.nav
@@ -120,7 +121,7 @@ export default function Home() {
                 </div>
               </div>
               <span className="text-2xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent tracking-tight">
-                KETRAMS
+                KACOPO-IMS
               </span>
             </Link>
 
@@ -159,7 +160,7 @@ export default function Home() {
                       <GraduationCap className="h-5 w-5 mr-3 text-blue-300" />
                       <div>
                         <p className="font-medium">Student Registration</p>
-                        <p className="text-xs text-white/80">Apply to institutions</p>
+                        <p className="text-xs text-white/80">Apply to polytechnics</p>
                       </div>
                     </Link>
                     <Link
@@ -170,7 +171,7 @@ export default function Home() {
                       <Building2 className="h-5 w-5 mr-3 text-green-300" />
                       <div>
                         <p className="font-medium">Institution Registration</p>
-                        <p className="text-xs text-white/80">Register your institution</p>
+                        <p className="text-xs text-white/80">Register your polytechnic</p>
                       </div>
                     </Link>
                   </motion.div>
@@ -191,7 +192,9 @@ export default function Home() {
             animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
-            
+            <span className="inline-block px-3 py-1 text-sm font-semibold text-indigo-200 bg-white/10 backdrop-blur-md rounded-full border border-white/20 mb-6">
+              Kakamega County Polytechnics Information Management System
+            </span>
           </motion.div>
 
           <motion.h1
@@ -200,9 +203,9 @@ export default function Home() {
             transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
             className="text-5xl md:text-7xl font-extrabold text-white mb-6 leading-tight drop-shadow-2xl"
           >
-            Your future starts{' '}
+            Centralised Management for{' '}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-orange-300 to-pink-300 animate-pulse">
-              here
+              County Polytechnics
             </span>
           </motion.h1>
 
@@ -212,7 +215,7 @@ export default function Home() {
             transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
             className="text-xl text-white/90 max-w-3xl mx-auto mb-12 drop-shadow-lg"
           >
-            Apply to TVET/VTC institutions in Kakamega County. Navigate your entire application journey with KETRAMS – seamless, transparent, and fast.
+            KACOPO-IMS – The unified platform for managing student admissions, staff, assets, and reporting across all TVET institutions in Kakamega County.
           </motion.p>
 
           <motion.div
@@ -267,10 +270,10 @@ export default function Home() {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 drop-shadow-lg">
-              Built for <span className="text-indigo-300">Institutions</span>
+              Built for <span className="text-indigo-300">Polytechnics &amp; County Officials</span>
             </h2>
             <p className="text-lg text-white/80 max-w-2xl mx-auto">
-              Everything you need to manage admissions, track applicants, and grow your student body – all in one place.
+              A complete ecosystem for admissions, staff management, asset tracking, and data‑driven decision making.
             </p>
           </div>
 
@@ -360,15 +363,15 @@ export default function Home() {
             <Shield className="h-6 w-6 text-indigo-300" />
           </div>
           <blockquote className="text-2xl md:text-3xl font-medium text-white mb-8 drop-shadow-lg">
-            "KETRAMS transformed how we handle admissions. We now process applications 3x faster."
+            "KACOPO-IMS has transformed how we manage admissions and institutional data. It's a game changer for county polytechnics."
           </blockquote>
           <div className="flex items-center justify-center space-x-4">
             <div className="h-12 w-12 bg-gradient-to-br from-indigo-400 to-purple-400 rounded-full flex items-center justify-center text-white font-bold shadow-lg">
-              JK
+              CO
             </div>
             <div className="text-left">
-              <p className="text-white font-semibold">James Kiprop</p>
-              <p className="text-sm text-white/70">Registrar, Butere TVC</p>
+              <p className="text-white font-semibold">Chief Officer</p>
+              <p className="text-sm text-white/70">Ministry of Education, Kakamega</p>
             </div>
           </div>
         </div>
@@ -379,7 +382,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto flex flex-col items-center md:flex-row md:justify-between gap-6">
           <div className="flex items-center space-x-2">
             <GraduationCap className="h-6 w-6 text-indigo-300" />
-            <span className="text-lg font-bold text-white">KETRAMS</span>
+            <span className="text-lg font-bold text-white">KACOPO-IMS</span>
           </div>
           <div className="flex flex-wrap justify-center gap-6 text-sm">
             <Link href="/about" className="text-white/70 hover:text-white transition">About</Link>
@@ -388,7 +391,7 @@ export default function Home() {
             <Link href="/terms" className="text-white/70 hover:text-white transition">Terms</Link>
           </div>
           <p className="text-sm text-white/50">
-            © {new Date().getFullYear()} KETRAMS. All rights reserved.
+            © {new Date().getFullYear()} Kakamega County Government. All rights reserved.
           </p>
         </div>
       </footer>
