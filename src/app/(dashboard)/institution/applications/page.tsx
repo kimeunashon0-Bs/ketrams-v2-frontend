@@ -6,29 +6,22 @@ import api from '@/lib/api/axios';
 import { format } from 'date-fns';
 import {
   Search,
-  Filter,
   Eye,
   CheckCircle,
   XCircle,
-  Clock,
   Download,
-  ChevronDown,
   MoreHorizontal,
   FileText,
   User,
   PlusCircle,
   Phone,
-  Mail,
-  MapPin,
   GraduationCap as GradIcon,
-  Shield,
-  AlertCircle
 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import {
   Table,
   TableBody,
@@ -62,11 +55,11 @@ import {
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Separator } from '@/components/ui/separator';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import CameraCapture from '@/components/CameraCapture';
 import { toast } from 'sonner';
 
 interface Application {
@@ -162,6 +155,7 @@ export default function InstitutionApplicationsPage() {
   const [selectedCourseId, setSelectedCourseId] = useState('');
   const [subCounties, setSubCounties] = useState<{ id: number; name: string }[]>([]);
   const [wards, setWards] = useState<{ id: number; name: string }[]>([]);
+  const [capturedPhoto, setCapturedPhoto] = useState<string | null>(null);
 
   useEffect(() => {
     fetchApplications();
@@ -394,6 +388,7 @@ export default function InstitutionApplicationsPage() {
           previousSchool: studentData.previousSchool,
           highestQualification: studentData.highestQualification,
           password: tempPassword,
+          photo: capturedPhoto,
         });
         userId = createUserRes.data.userId;
         await api.post('/auth/send-temp-password', {
@@ -443,6 +438,7 @@ export default function InstitutionApplicationsPage() {
     setOtpError('');
     setExistingUser(null);
     setSelectedCourseId('');
+    setCapturedPhoto(null);
   };
 
   // Walk-in modal step renderers
@@ -560,6 +556,14 @@ export default function InstitutionApplicationsPage() {
           <Input value={studentData.email} onChange={(e) => setStudentData({...studentData, email: e.target.value})} />
         </div>
       </div>
+      <Separator />
+      <h4 className="font-medium">Student Photo (optional)</h4>
+      <p className="text-sm text-muted-foreground">Use your webcam to capture a photo. If not available, you can skip.</p>
+      <CameraCapture
+        onCapture={(img) => setCapturedPhoto(img)}
+        onClear={() => setCapturedPhoto(null)}
+        initialImage={capturedPhoto}
+      />
     </div>
   );
 
