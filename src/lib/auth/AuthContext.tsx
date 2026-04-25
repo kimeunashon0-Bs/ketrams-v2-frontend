@@ -1,4 +1,5 @@
 "use client";
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import api from '@/lib/api/axios';
@@ -7,11 +8,11 @@ import Cookies from 'js-cookie';
 interface User {
   id: number;
   phoneNumber: string;
-  role: 'STUDENT' | 'INSTITUTION' | 'SUB_COUNTY' | 'ADMIN';
-  subCounty?: string; // for SUB_COUNTY role
-  fullName?: string;  // for all roles (especially institution)
+  role: 'STUDENT' | 'INSTITUTION' | 'TREASURY' | 'MINISTRY_OFFICER' | 'ADMIN';
+  subCounty?: string;
+  fullName?: string;
   gender?: string;
-  title?: string;     // Mr, Mrs, Ms
+  title?: string;
   institutionId?: number;
   institutionName?: string;
 }
@@ -46,6 +47,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     try {
       const response = await api.post('/auth/login', { phoneNumber, password, rememberMe });
       const { token, role, userId, subCounty, fullName, gender, title, institutionId, institutionName } = response.data.data;
+      
       const userData: User = {
         id: userId,
         phoneNumber,
@@ -59,16 +61,24 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       };
 
       const cookieExpires = rememberMe ? 7 : 1;
-      Cookies.set('token', token, { expires: cookieExpires });
-      Cookies.set('user', JSON.stringify(userData), { expires: cookieExpires });
+      Cookies.set('token', token, { expires: cookieExpires, path: '/' });
+      Cookies.set('user', JSON.stringify(userData), { expires: cookieExpires, path: '/' });
 
       setToken(token);
       setUser(userData);
 
-      if (role === 'STUDENT') router.push('/student/dashboard');
-      else if (role === 'INSTITUTION') router.push('/institution/dashboard');
-      else if (role === 'SUB_COUNTY') router.push('/subcounty/dashboard');
-      else if (role === 'ADMIN') router.push('/admin/dashboard');
+      const normalizedRole = typeof role === 'string' ? role.toUpperCase() : role;
+      const dashboardMap: Record<string, string> = {
+        STUDENT: '/student/dashboard',
+        INSTITUTION: '/institution/dashboard',
+        TREASURY: '/treasury/dashboard',
+        MINISTRY_OFFICER: '/ministry/dashboard',
+        MINISTRY: '/ministry/dashboard',
+        ADMIN: '/ministry/dashboard',
+      };
+
+      const redirectPath = dashboardMap[normalizedRole] || '/student/dashboard';
+      router.push(redirectPath);
     } catch (error) {
       console.error('Login failed:', error);
       throw error;
@@ -76,8 +86,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const logout = () => {
-    Cookies.remove('token');
-    Cookies.remove('user');
+    Cookies.remove('token', { path: '/' });
+    Cookies.remove('user', { path: '/' });
     setToken(null);
     setUser(null);
     router.replace('/');

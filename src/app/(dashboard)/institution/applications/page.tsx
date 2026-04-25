@@ -336,81 +336,89 @@ export default function InstitutionApplicationsPage() {
   };
 
   const handleVerifyWalkinOtp = async () => {
-    setProcessing(true);
-    setOtpError('');
-    try {
-      await api.post('/auth/verify-otp', {
-        phoneNumber: studentData.phoneNumber,
-        otpCode: otpCode,
-      });
-      // Check if user already exists
-      const userCheck = await api.get(`/users/by-phone/${studentData.phoneNumber}`);
-      setExistingUser(userCheck.data);
+  setProcessing(true);
+  setOtpError('');
+  try {
+    await api.post('/auth/verify-otp', {
+      phoneNumber: studentData.phoneNumber,
+      otpCode: otpCode,
+    });
+    // Check if user already exists
+    const userCheck = await api.get(`/users/by-phone/${studentData.phoneNumber}`);
+    setExistingUser(userCheck.data.data); // ✅ correct nesting
+    setWalkinStep(3);
+  } catch (err: any) {
+    if (err.response?.status === 404) {
+      setExistingUser(null);
       setWalkinStep(3);
-    } catch (err: any) {
-      if (err.response?.status === 404) {
-        setExistingUser(null);
-        setWalkinStep(3);
-      } else {
-        setOtpError(err.response?.data?.message || 'Invalid OTP');
-      }
-    } finally {
-      setProcessing(false);
+    } else {
+      setOtpError(err.response?.data?.message || 'Invalid OTP');
     }
-  };
+  } finally {
+    setProcessing(false);
+  }
+};
 
-  const handleSubmitWalkinApplication = async () => {
-    if (!selectedCourseId) {
-      toast.error('Please select a course');
-      return;
-    }
-    setProcessing(true);
-    try {
-      let userId = existingUser?.id;
-      if (!existingUser) {
-        const tempPassword = Math.random().toString(36).slice(-8) + 'A1!';
-        const createUserRes = await api.post('/auth/register', {
-          phoneNumber: studentData.phoneNumber,
-          email: studentData.email,
-          fullName: studentData.fullName,
-          gender: studentData.gender,
-          disabilityStatus: studentData.disabilityStatus,
-          idNumber: studentData.idNumber,
-          birthCertNumber: studentData.birthCertNumber,
-          parentName: studentData.parentName,
-          parentPhone: studentData.parentPhone,
-          parentRelationship: studentData.parentRelationship,
-          county: studentData.county,
-          subCounty: studentData.subCounty,
-          ward: studentData.ward,
-          location: studentData.location,
-          sublocation: studentData.sublocation,
-          previousSchool: studentData.previousSchool,
-          highestQualification: studentData.highestQualification,
-          password: tempPassword,
-          photo: capturedPhoto,
-        });
-        userId = createUserRes.data.userId;
-        await api.post('/auth/send-temp-password', {
-          phoneNumber: studentData.phoneNumber,
-          password: tempPassword,
-        });
-        toast.success('Student account created. Temporary password sent via SMS.');
-      }
-      await api.post('/institution/applications/walkin', {
-        studentId: userId,
-        courseId: parseInt(selectedCourseId),
+const handleSubmitWalkinApplication = async () => {
+  if (!selectedCourseId) {
+    toast.error('Please select a course');
+    return;
+  }
+  setProcessing(true);
+  try {
+    let userId = existingUser?.id;
+    if (!existingUser) {
+      const tempPassword = Math.random().toString(36).slice(-8) + 'A1!';
+      const createUserRes = await api.post('/auth/register', {
+        phoneNumber: studentData.phoneNumber,
+        email: studentData.email,
+        fullName: studentData.fullName,
+        gender: studentData.gender,
+        disabilityStatus: studentData.disabilityStatus,
+        idNumber: studentData.idNumber,
+        birthCertNumber: studentData.birthCertNumber,
+        parentName: studentData.parentName,
+        parentPhone: studentData.parentPhone,
+        parentRelationship: studentData.parentRelationship,
+        county: studentData.county,
+        subCounty: studentData.subCounty,
+        ward: studentData.ward,
+        location: studentData.location,
+        sublocation: studentData.sublocation,
+        previousSchool: studentData.previousSchool,
+        highestQualification: studentData.highestQualification,
+        password: tempPassword,
+        photo: capturedPhoto,
       });
-      toast.success('Application created successfully');
-      setShowWalkinModal(false);
-      resetWalkinModal();
-      fetchApplications();
-    } catch (err: any) {
-      toast.error(err.response?.data?.message || 'Failed to create application');
-    } finally {
-      setProcessing(false);
+      // Extract userId from the response structure
+      userId = createUserRes.data?.data?.userId || createUserRes.data?.userId;
+      if (!userId) {
+        console.error('Registration response:', createUserRes.data);
+        toast.error('Failed to create student account');
+        setProcessing(false);
+        return;
+      }
+      await api.post('/auth/send-temp-password', {
+        phoneNumber: studentData.phoneNumber,
+        password: tempPassword,
+      });
+      toast.success('Student account created. Temporary password sent via SMS.');
     }
-  };
+    await api.post('/institution/applications/walkin', {
+      studentId: userId,
+      courseId: parseInt(selectedCourseId),
+    });
+    toast.success('Application created successfully');
+    setShowWalkinModal(false);
+    resetWalkinModal();
+    fetchApplications();
+  } catch (err: any) {
+    console.error('Walkin error:', err);
+    toast.error(err.response?.data?.message || 'Failed to create application');
+  } finally {
+    setProcessing(false);
+  }
+};
 
   const resetWalkinModal = () => {
     setWalkinStep(1);

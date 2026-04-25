@@ -1,4 +1,4 @@
-export default function SubCountyLayout({
+export default function MinistryLayout({
   children,
 }: {
   children: React.ReactNode;

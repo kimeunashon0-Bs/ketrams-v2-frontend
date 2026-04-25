@@ -23,8 +23,8 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
     const isProtectedRoute =
       pathname.startsWith('/student') ||
       pathname.startsWith('/institution') ||
-      pathname.startsWith('/subcounty') ||
-      pathname.startsWith('/admin');
+      pathname.startsWith('/treasury') ||
+      pathname.startsWith('/ministry');
 
     // 1. Protected route but no user → redirect to login
     if (!user && isProtectedRoute) {
@@ -34,13 +34,16 @@ export default function AuthGuard({ children }: { children: React.ReactNode }) {
 
     // 2. Auth page but user exists → redirect to appropriate dashboard
     if (user && isAuthPage) {
+      const normalizedRole = user.role?.toUpperCase();
       const dashboardMap: Record<string, string> = {
         STUDENT: '/student/dashboard',
         INSTITUTION: '/institution/dashboard',
-        SUB_COUNTY: '/subcounty/dashboard',
-        ADMIN: '/admin/dashboard',
+        TREASURY: '/treasury/dashboard',
+        MINISTRY_OFFICER: '/ministry/dashboard',
+        MINISTRY: '/ministry/dashboard',
+        ADMIN: '/ministry/dashboard',
       };
-      router.replace(dashboardMap[user.role] || '/');
+      router.replace(dashboardMap[normalizedRole] || '/');
       return;
     }
 

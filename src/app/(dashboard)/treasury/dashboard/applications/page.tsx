@@ -81,7 +81,7 @@ export default function SubCountyApplicationsPage() {
   const fetchApplications = async () => {
     setLoading(true);
     try {
-      const response = await api.get('/subcounty/applications');
+      const response = await api.get('/treasury/applications');
       setApplications(response.data.data);
     } catch (error) {
       console.error('Failed to fetch applications', error);
@@ -160,7 +160,7 @@ export default function SubCountyApplicationsPage() {
     if (selectedApps.size === 0) return;
     setActionLoading(true);
     try {
-      await api.post('/subcounty/applications/batch/facilitate', {
+      await api.post('/treasury/applications/batch/facilitate', {
         applicationIds: Array.from(selectedApps),
         amount,
         remarks,
@@ -185,7 +185,7 @@ export default function SubCountyApplicationsPage() {
       if (filters.gender) params.append('gender', filters.gender);
       if (filters.disabilityStatus) params.append('disabilityStatus', filters.disabilityStatus);
       if (filters.status) params.append('status', filters.status);
-      const response = await api.get(`/subcounty/applications/export/csv?${params.toString()}`, {
+      const response = await api.get(`/treasury/applications/export/csv?${params.toString()}`, {
         responseType: 'blob',
       });
       saveAs(new Blob([response.data]), 'subcounty-applications.csv');

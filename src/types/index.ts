@@ -1,8 +1,8 @@
 export interface User {
   id: number;
   phoneNumber: string;
-  role: 'STUDENT' | 'INSTITUTION' | 'SUB_COUNTY' | 'ADMIN';
-  subCounty?: string; // only for SUB_COUNTY role
+  role: 'STUDENT' | 'INSTITUTION' | 'TREASURY' | 'MINISTRY_OFFICER' | 'ADMIN';
+  subCounty?: string; // only for TREASURY role
 }
 
 export interface Institution {

@@ -1,5 +1,5 @@
 "use client";
-
+import { ClipboardList, Briefcase, Package, PieChart, School, Inbox } from 'lucide-react';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
@@ -25,14 +25,6 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import { useSidebar } from '@/contexts/SidebarContext';
@@ -58,9 +50,11 @@ const navigation: Record<string, NavSection[]> = {
       title: 'Main',
       items: [
         { name: 'Dashboard', href: '/institution/dashboard', icon: Home },
-        { name: 'Applications', href: '/institution/applications', icon: Users },
+        { name: 'Applications', href: '/institution/applications', icon: ClipboardList },
         { name: 'Courses', href: '/institution/courses', icon: BookOpen },
         { name: 'Reports', href: '/institution/reports', icon: BarChart3 },
+        { name: 'Staff', href: '/institution/staff', icon: Briefcase },
+        { name: 'Assets', href: '/institution/assets', icon: Package },
       ]
     },
     {
@@ -76,29 +70,33 @@ const navigation: Record<string, NavSection[]> = {
       items: [
         { name: 'Dashboard', href: '/student/dashboard', icon: Home },
         { name: 'My Profile', href: '/student/profile', icon: Users },
-        { name: 'Applications', href: '/student/applications', icon: FileText },
+        { name: 'Applications', href: '/student/applications', icon: ClipboardList },
         { name: 'Explore', href: '/student/institutions', icon: Building2 },
       ]
     }
   ],
-  subcounty: [
+  treasury: [
     {
       title: 'Main',
       items: [
-        { name: 'Dashboard', href: '/subcounty/dashboard', icon: Home },
-        { name: 'Applications', href: '/subcounty/applications', icon: Users },
-        { name: 'Reports', href: '/subcounty/reports', icon: BarChart3 },
+        { name: 'Dashboard', href: '/treasury/dashboard', icon: Home },
+        { name: 'Applications', href: '/treasury/applications', icon: ClipboardList },
+        { name: 'Reports', href: '/treasury/reports', icon: BarChart3 },
+        { name: 'Staff Records', href: '/treasury/staff', icon: Briefcase },
+        { name: 'Assets', href: '/treasury/assets', icon: Package },
       ]
     }
   ],
-  admin: [
+  ministry: [
     {
       title: 'Main',
       items: [
-        { name: 'Dashboard', href: '/admin/dashboard', icon: Home },
-        { name: 'Institutions', href: '/admin/institutions', icon: Building2 },
-        { name: 'Users', href: '/admin/institution-users', icon: Users },
-        { name: 'Requests', href: '/admin/institution-requests', icon: FileText },
+        { name: 'Dashboard', href: '/ministry/dashboard', icon: Home },
+        { name: 'Applications', href: '/ministry/applications', icon: ClipboardList },
+        { name: 'Institutions', href: '/ministry/institutions', icon: Building2 },
+        { name: 'Institution Users', href: '/ministry/institution-users', icon: Users },
+        { name: 'Staff Records', href: '/ministry/staff', icon: Briefcase },
+        { name: 'Assets', href: '/ministry/assets', icon: Package },
       ]
     }
   ]
@@ -113,16 +111,19 @@ export function DashboardSidebar() {
   const [notifications, setNotifications] = useState<any[]>([]);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
 
-  const role = user?.role?.toLowerCase() || 'student';
-  const navSections = navigation[role] || navigation.student;
+  // Map role to navigation key
+  let roleKey = user?.role?.toLowerCase() || 'student';
+  if (roleKey === 'ministry_officer') roleKey = 'ministry';
+  if (roleKey === 'admin') roleKey = 'ministry';
+  const navSections = navigation[roleKey] || navigation.student;
 
   useEffect(() => {
     if (user?.role === 'INSTITUTION') {
       fetchInstitutionData();
-    } else if (user?.role === 'SUB_COUNTY') {
-      fetchSubCountyData();
-    } else if (user?.role === 'ADMIN') {
-      fetchAdminData();
+    } else if (user?.role === 'TREASURY') {
+      fetchTreasuryData();
+    } else if (user?.role === 'MINISTRY_OFFICER' || user?.role === 'ADMIN') {
+      fetchMinistryData();
     }
   }, [user]);
 
@@ -135,7 +136,6 @@ export function DashboardSidebar() {
       const appsRes = await api.get('/institution/applications');
       const pending = appsRes.data.data.filter((a: any) => a.status === 'PENDING_INSTITUTION').length;
       setPendingCount(pending);
-      
       setNotifications([
         { id: 1, title: 'New Application', message: '5 new applications received', time: '5 min ago' },
         { id: 2, title: 'Course Update', message: 'ICT course was updated', time: '1 hour ago' },
@@ -145,27 +145,28 @@ export function DashboardSidebar() {
     }
   };
 
-  const fetchSubCountyData = async () => {
+  const fetchTreasuryData = async () => {
     try {
-      const appsRes = await api.get('/subcounty/applications');
+      const appsRes = await api.get('/treasury/applications');
       const pending = appsRes.data.data.filter((a: any) => 
-        a.status === 'APPROVED_BY_INSTITUTION' || a.status === 'PENDING_SUB_COUNTY'
+        a.status === 'APPROVED_BY_INSTITUTION' || a.status === 'PENDING_TREASURY'
       ).length;
       setPendingCount(pending);
     } catch (error) {
-      console.error('Failed to fetch sub-county data', error);
+      console.error('Failed to fetch treasury data', error);
     }
   };
 
-  const fetchAdminData = async () => {
-    try {
-      const requestsRes = await api.get('/admin/institution-requests');
-      const pending = requestsRes.data.filter((r: any) => r.status === 'PENDING').length;
-      setPendingCount(pending);
-    } catch (error) {
-      console.error('Failed to fetch admin data', error);
-    }
-  };
+const fetchMinistryData = async () => {
+  try {
+    // const requestsRes = await api.get('/ministry/institution-requests');
+    // const pending = requestsRes.data.filter((r: any) => r.status === 'PENDING').length;
+    // setPendingCount(pending);
+    setPendingCount(0); // or remove the badge entirely
+  } catch (error) {
+    console.error('Failed to fetch ministry data', error);
+  }
+};
 
   const getInitials = () => {
     if (user?.fullName) {
@@ -221,7 +222,7 @@ export function DashboardSidebar() {
               <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
                 <span className="text-lg font-bold text-primary-foreground">K</span>
               </div>
-              <span className="text-xl font-bold">KETRAMS</span>
+              <span className="text-xl font-bold">KACOPO-IMS</span>
             </div>
           ) : (
             <div className="w-full flex justify-center">

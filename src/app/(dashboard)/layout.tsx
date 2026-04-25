@@ -1,9 +1,9 @@
 "use client";
-
+import { useIdleTimeout } from '@/hooks/useIdleTimeout';
 import { DashboardSidebar } from '@/components/layout/DashboardSidebar';
 import { DashboardHeader } from '@/components/layout/DashboardHeader';
 import { SidebarProvider, useSidebar } from '@/contexts/SidebarContext';
-import { DashboardProvider } from '@/contexts/DashboardContext'; // <-- Add this
+import { DashboardProvider } from '@/contexts/DashboardContext'; 
 import { cn } from '@/lib/utils';
 
 function DashboardContent({ children }: { children: React.ReactNode }) {
@@ -32,6 +32,7 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
+  useIdleTimeout();
   return (
     <SidebarProvider>
       <DashboardProvider> 
