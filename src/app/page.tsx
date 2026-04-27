@@ -185,14 +185,14 @@ export default function Home() {
       <div className="h-20" />
 
       {/* Hero Section */}
-      <section ref={heroRef} className="relative py-16 md:py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <section ref={heroRef} className="relative py-12 md:py-16">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, ease: "easeOut" }}
           >
-            <span className="inline-block px-3 py-1 text-sm font-semibold text-indigo-200 bg-white/10 backdrop-blur-md rounded-full border border-white/20 mb-6">
+            <span className="inline-block px-3 py-1 text-sm font-semibold text-indigo-200 bg-white/10 backdrop-blur-md rounded-full border border-white/20 mb-4">
               Kakamega County Polytechnics Information Management System
             </span>
           </motion.div>
@@ -213,7 +213,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 30 }}
             animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.4, ease: "easeOut" }}
-            className="text-xl text-white/90 max-w-3xl mx-auto mb-12 drop-shadow-lg"
+            className="text-xl text-white/90 max-w-3xl mx-auto mb-8 drop-shadow-lg"
           >
             KACOPO-IMS – The unified platform for managing student admissions, staff, assets, and reporting across all TVET institutions in Kakamega County.
           </motion.p>
@@ -247,7 +247,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 30 }}
             animate={isHeroInView ? { opacity: 1, y: 0 } : {}}
             transition={{ duration: 0.8, delay: 0.8, ease: "easeOut" }}
-            className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto mt-20"
+            className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-4xl mx-auto mt-14"
           >
             {stats.map((stat, idx) => (
               <motion.div
