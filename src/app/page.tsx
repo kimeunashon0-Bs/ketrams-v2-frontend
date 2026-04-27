@@ -378,27 +378,27 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-slate-950 text-white border-t border-white/10 py-16 px-4 sm:px-6 lg:px-8">
+      <footer className="bg-slate-950 text-white border-t border-slate-800 py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto grid gap-10 lg:grid-cols-[1.5fr_1fr_1fr] items-start">
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <GraduationCap className="h-6 w-6 text-indigo-400" />
-              <span className="text-lg font-semibold uppercase tracking-[0.18em] text-white">
+              <GraduationCap className="h-6 w-6 text-indigo-300" />
+              <span className="text-lg font-semibold uppercase tracking-[0.18em] text-slate-100">
                 KACOPO-IMS
               </span>
             </div>
             <p className="max-w-lg text-sm text-slate-300">
               Kakamega County's unified platform for admissions, institution management, staff coordination, and reporting across TVET campuses.
             </p>
-            <p className="text-sm text-slate-400">
-              Built to simplify operations, secure data, and support seamless collaboration between schools, ministry officers, and treasury staff.
+            <p className="text-sm text-slate-300">
+              Built to simplify operations, secure data, and support smooth collaboration between schools, ministry officers, and treasury staff.
             </p>
           </div>
           <div className="space-y-4">
-            <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-300">
+            <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-200">
               Quick links
             </h3>
-            <ul className="space-y-3 text-sm text-slate-400">
+            <ul className="space-y-3 text-sm text-slate-300">
               <li>
                 <Link href="/about" className="hover:text-white transition">
                   About
@@ -422,21 +422,21 @@ export default function Home() {
             </ul>
           </div>
           <div className="space-y-4">
-            <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-300">
+            <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-200">
               Contact
             </h3>
-            <p className="text-sm text-slate-400">
+            <p className="text-sm text-slate-300">
               Kakamega County Government
             </p>
-            <p className="text-sm text-slate-400">
+            <p className="text-sm text-slate-300">
               support@kacopo-ims.app
             </p>
-            <p className="text-sm text-slate-400">
+            <p className="text-sm text-slate-300">
               +254 700 000 000
             </p>
           </div>
         </div>
-        <div className="mt-10 border-t border-white/10 pt-6 text-sm text-slate-500 text-center">
+        <div className="mt-10 border-t border-slate-800 pt-6 text-sm text-slate-500 text-center">
           © {new Date().getFullYear()} Kakamega County Government. All rights reserved.
         </div>
       </footer>
