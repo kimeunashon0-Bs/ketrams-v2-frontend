@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "KETRAMS - Kakamega Education & Training Management System",
+  title: "KACOPO-IMS - Kakamega Integrated Management System",
   description: "Apply to TVET/VTC institutions in Kakamega County",
 };
 

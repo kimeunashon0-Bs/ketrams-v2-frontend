@@ -56,8 +56,8 @@ export default function AuthLayout({ children, title, subtitle }: AuthLayoutProp
         {/* Overlay gradient */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
         <div className="absolute top-10 left-10 text-white">
-          <h1 className="text-4xl font-bold">KETRAMS</h1>
-          <p className="text-lg mt-2">Kakamega Education & Training Management System</p>
+          <h1 className="text-4xl font-bold">KACOPO-IMS</h1>
+          <p className="text-lg mt-2">Kakamega Integrated Management System</p>
         </div>
       </div>
 

@@ -47,7 +47,7 @@ export function Header({ showSearch = true, onSearch, onFilterToggle, filterActi
             <Menu className="h-5 w-5" />
           </Button>
           <Link href="/" className="flex items-center gap-2">
-            <span className="text-xl font-bold text-primary">KETRAMS</span>
+            <span className="text-xl font-bold text-primary">KACOPO-IMS</span>
           </Link>
           <span className="hidden text-sm font-medium text-muted-foreground lg:inline-block">
             {getPageTitle()}

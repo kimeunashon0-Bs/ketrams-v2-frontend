@@ -378,21 +378,38 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-white/10 backdrop-blur-md border-t border-white/20 py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto flex flex-col items-center md:flex-row md:justify-between gap-6">
-          <div className="flex items-center space-x-2">
-            <GraduationCap className="h-6 w-6 text-indigo-300" />
-            <span className="text-lg font-bold text-white">KACOPO-IMS</span>
+      <footer className="bg-slate-950/90 text-white border-t border-white/10 py-16 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto grid gap-8 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] items-start">
+          <div className="space-y-4">
+            <div className="flex items-center gap-3">
+              <GraduationCap className="h-6 w-6 text-indigo-300" />
+              <span className="text-lg font-semibold uppercase tracking-[0.18em] text-white">
+                KACOPO-IMS
+              </span>
+            </div>
+            <p className="max-w-2xl text-sm text-slate-300">
+              A secure admissions and institution-management platform built for Kakamega County TVET operations.
+            </p>
           </div>
-          <div className="flex flex-wrap justify-center gap-6 text-sm">
-            <Link href="/about" className="text-white/70 hover:text-white transition">About</Link>
-            <Link href="/contact" className="text-white/70 hover:text-white transition">Contact</Link>
-            <Link href="/privacy" className="text-white/70 hover:text-white transition">Privacy</Link>
-            <Link href="/terms" className="text-white/70 hover:text-white transition">Terms</Link>
+          <div className="flex flex-col items-start justify-between gap-8 sm:items-end">
+            <div className="flex flex-wrap justify-center gap-4 text-sm text-slate-300">
+              <Link href="/about" className="hover:text-white transition">
+                About
+              </Link>
+              <Link href="/contact" className="hover:text-white transition">
+                Contact
+              </Link>
+              <Link href="/privacy" className="hover:text-white transition">
+                Privacy
+              </Link>
+              <Link href="/terms" className="hover:text-white transition">
+                Terms
+              </Link>
+            </div>
+            <p className="text-sm text-slate-400 text-left sm:text-right">
+              © {new Date().getFullYear()} Kakamega County Government. All rights reserved.
+            </p>
           </div>
-          <p className="text-sm text-white/50">
-            © {new Date().getFullYear()} Kakamega County Government. All rights reserved.
-          </p>
         </div>
       </footer>
     </div>

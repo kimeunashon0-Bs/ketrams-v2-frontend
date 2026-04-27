@@ -62,7 +62,7 @@ export default function LoginPage() {
   };
 
   return (
-    <AuthLayout title="Sign in to KETRAMS" subtitle="Use your phone number and password">
+    <AuthLayout title="Sign in to KACOPO-IMS" subtitle="Use your phone number and password">
       <form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
         <div className="space-y-4">
           {/* Phone Number */}
