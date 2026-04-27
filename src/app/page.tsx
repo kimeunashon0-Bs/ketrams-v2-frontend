@@ -378,38 +378,66 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-slate-950/90 text-white border-t border-white/10 py-16 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto grid gap-8 lg:grid-cols-[minmax(0,1.4fr)_minmax(0,1fr)] items-start">
+      <footer className="bg-slate-950 text-white border-t border-white/10 py-16 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto grid gap-10 lg:grid-cols-[1.5fr_1fr_1fr] items-start">
           <div className="space-y-4">
             <div className="flex items-center gap-3">
-              <GraduationCap className="h-6 w-6 text-indigo-300" />
+              <GraduationCap className="h-6 w-6 text-indigo-400" />
               <span className="text-lg font-semibold uppercase tracking-[0.18em] text-white">
                 KACOPO-IMS
               </span>
             </div>
-            <p className="max-w-2xl text-sm text-slate-300">
-              A secure admissions and institution-management platform built for Kakamega County TVET operations.
+            <p className="max-w-lg text-sm text-slate-300">
+              Kakamega County's unified platform for admissions, institution management, staff coordination, and reporting across TVET campuses.
+            </p>
+            <p className="text-sm text-slate-400">
+              Built to simplify operations, secure data, and support seamless collaboration between schools, ministry officers, and treasury staff.
             </p>
           </div>
-          <div className="flex flex-col items-start justify-between gap-8 sm:items-end">
-            <div className="flex flex-wrap justify-center gap-4 text-sm text-slate-300">
-              <Link href="/about" className="hover:text-white transition">
-                About
-              </Link>
-              <Link href="/contact" className="hover:text-white transition">
-                Contact
-              </Link>
-              <Link href="/privacy" className="hover:text-white transition">
-                Privacy
-              </Link>
-              <Link href="/terms" className="hover:text-white transition">
-                Terms
-              </Link>
-            </div>
-            <p className="text-sm text-slate-400 text-left sm:text-right">
-              © {new Date().getFullYear()} Kakamega County Government. All rights reserved.
+          <div className="space-y-4">
+            <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-300">
+              Quick links
+            </h3>
+            <ul className="space-y-3 text-sm text-slate-400">
+              <li>
+                <Link href="/about" className="hover:text-white transition">
+                  About
+                </Link>
+              </li>
+              <li>
+                <Link href="/contact" className="hover:text-white transition">
+                  Contact
+                </Link>
+              </li>
+              <li>
+                <Link href="/privacy" className="hover:text-white transition">
+                  Privacy
+                </Link>
+              </li>
+              <li>
+                <Link href="/terms" className="hover:text-white transition">
+                  Terms
+                </Link>
+              </li>
+            </ul>
+          </div>
+          <div className="space-y-4">
+            <h3 className="text-sm font-semibold uppercase tracking-[0.2em] text-slate-300">
+              Contact
+            </h3>
+            <p className="text-sm text-slate-400">
+              Kakamega County Government
+            </p>
+            <p className="text-sm text-slate-400">
+              support@kacopo-ims.app
+            </p>
+            <p className="text-sm text-slate-400">
+              +254 700 000 000
             </p>
           </div>
+        </div>
+        <div className="mt-10 border-t border-white/10 pt-6 text-sm text-slate-500 text-center">
+          © {new Date().getFullYear()} Kakamega County Government. All rights reserved.
         </div>
       </footer>
     </div>
